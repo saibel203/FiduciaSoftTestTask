@@ -1,0 +1,17 @@
+{
+  "name": "fiduciasofttesttask.web",
+  "version": "1.0.0",
+  "devDependencies": {
+    "gulp": "^5.0.0",
+    "gulp-autoprefixer": "^8.0.0",
+    "gulp-clean-css": "^4.3.0",
+    "gulp-rename": "^2.0.0",
+    "gulp-sass": "^5.1.0",
+    "gulp-typescript": "^6.0.0-alpha.1",
+    "gulp-uglify": "^3.0.2",
+    "sass": "^1.80.6"
+  },
+  "scripts": {
+    "watch": "gulp"
+  }
+}

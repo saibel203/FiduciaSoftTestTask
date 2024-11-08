@@ -1,0 +1,21 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <title>@ViewData["Title"]</title>
+
+    <!-- Styles -->
+    @await Html.PartialAsync("./StaticItems/_Styles")
+    @await RenderSectionAsync("StylesSection", false)
+</head>
+<body>
+    @RenderBody()
+
+    <!-- Scripts -->
+    @await Html.PartialAsync("./StaticItems/_Scripts")
+    @await RenderSectionAsync("ScriptsSection", false)
+</body>
+</html>

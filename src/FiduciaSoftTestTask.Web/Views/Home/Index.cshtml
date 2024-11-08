@@ -1,0 +1,101 @@
+﻿@{
+    ViewData["Title"] = "City Weather";
+}
+
+<section class="vh-100">
+    <div class="container py-5 h-100">
+        <div class="row d-flex justify-content-center align-items-center h-100">
+            <div class="col-md-8 col-lg-6 col-xl-4">
+                <h3 class="mb-4 pb-2 fw-normal">Get city weather</h3>
+
+                <div class="input-group rounded mb-3">
+                    <input type="search" class="form-control rounded" placeholder="City" aria-label="Search"
+                           aria-describedby="search-addon" id="city-search">
+                    <a href="#" type="button" id="search-button">
+                        <span class="input-group-text border-0 fw-bold" id="search-addon">
+                            Get
+                        </span>
+                    </a>
+                </div>
+
+                <div class="card shadow-0 border">
+                    <div class="card-body p-4">
+
+                        <div class="d-flex">
+                            <h4 class="mb-1 sfw-normal" id="city"></h4><small id="country"></small>
+                        </div>
+                        <p class="mb-2">Current temperature: <strong id="current-temperature"></strong></p>
+                        <p>Feels like: <strong id="feels-like-temperature"></strong></p>
+                        <p>Max: <strong id="max-temperature"></strong>, Min: <strong id="min-temperature"></strong></p>
+                        <p>Humidity: <strong id="humidity"></strong></p>
+
+                        <div>
+                            <h6>Precipitation: </h6>
+                            <div id="weather-precipitation"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+@section ScriptsSection {
+    <script>
+        $(document).ready(function () {
+            const savedCity = localStorage.getItem("lastCity");
+            if (savedCity) {
+                $("#city-search").val(savedCity);
+                fetchWeather(savedCity);
+            }
+
+            $("#search-button").click(function () {
+                const cityname = $("#city-search").val();
+                if (cityname.length > 0) {
+                    fetchWeather(cityname);  // Only call fetchWeather, without saving yet
+                } else {
+                    alert("Please enter a city name.");
+                }
+            });
+        });
+
+        function fetchWeather(cityname) {
+            $.ajax({
+                url: "https://localhost:7263/Home/WeatherDetail?CityName=" + cityname,
+                type: "GET",
+                success: function (rsltval) {
+                    localStorage.setItem("lastCity", cityname);
+
+                    const data = rsltval;
+                    $("#city").text(data.name);
+                    $("#country").text(data.countryData.country);
+                    $("#current-temperature").text(data.main.temperature + '°C');
+                    $("#feels-like-temperature").text(data.main.feelsLikeTemperature + '°C');
+                    $("#max-temperature").text(data.main.maxTemperature + '°C');
+                    $("#min-temperature").text(data.main.minTemperature + '°C');
+                    $("#humidity").text(data.main.humidity + '%');
+
+                    let htmlText;
+                    if (data.weatherData) {
+                        htmlText = "<ul>";
+                        for (let i of data.weatherData) {
+                            htmlText += `<li><h6 class="mb-0">`;
+
+                            if (i.main === 'Rain') {
+                                htmlText += `<strong class="text-danger">${i.main}</strong></h6><p>${i.description}</p></li>`;
+                            } else {
+                                htmlText += `${i.main}</h6><p>${i.description}</p></li>`;
+                            }
+                        }
+                        htmlText += "</ul>";
+                    }
+
+                    $("#weather-precipitation").html(htmlText);
+                },
+                error: function () {
+                    alert("City Not Found");
+                }
+            });
+        }
+    </script>
+}
